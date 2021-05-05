@@ -5,9 +5,9 @@ import { Welcome } from './src/pages/welcome';
 export default function App(){
 
   return (
-   <View>
+ 
      <Welcome/>
-   </View>
+ 
   )
 }
 
