@@ -1,1 +1,3 @@
 expo start
+
+npm install react-native-iphone-x-helper --save
