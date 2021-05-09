@@ -41,25 +41,38 @@ export function PlantSelect(){
     const [isLoading, setIsLoading] = useState(true);
 
     const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(false);
+    const [loadingMore, setLoadingMore] = useState(false);
     const [loadedAll, setLoadedAll] = useState(false);
 
     async function fetchPlants(){
-        const {data} = await api.get(`plants?_sort=name&_order=asc&page=${page}&_limit=8`);
+        console.log(page);
+        const {data} = await api.get(`plants?_sort=name&_order=asc&_page=${page}&_limit=8`);
         
         if(!data){
-            setIsLoading(true);
+            console.log('all loaded')
+            return setLoadedAll(true);
         }
 
         if(page > 1){
-            setPlants(old => [...old, ...data]);
-            setFilteredPlants(old => [...old, ...data]);
+            setPlants(oldValue => [...oldValue, ...data]);
+            setFilteredPlants(oldValue => [...oldValue, ...data]);
         }else{
             setPlants(data);
             setFilteredPlants(data);
         }
         setIsLoading(false);
-        setHasMore(false);
+        setLoadingMore(false);
+    }
+
+    function handleFetchMore(distance: number){
+        if(distance < 1){
+            return;
+        }else{
+          
+            setLoadingMore(true);
+            setPage(oldValue => oldValue +1);
+            fetchPlants();
+        }
     }
 
     function handleEnv(env:string){
@@ -72,15 +85,7 @@ export function PlantSelect(){
         }
     }
 
-    function handleFetchMore(distance: number){
-        if(distance < 1){
-            return;
-        }else{
-            setHasMore(true);
-            setPage(oldValue => oldValue +1);
-            fetchPlants();
-        }
-    }
+    
 
     useEffect(()=>{
         async function fetchEnvironments(){
@@ -146,7 +151,7 @@ export function PlantSelect(){
                         onEndReachedThreshold = {0.1}
                         onEndReached ={({distanceFromEnd})=> handleFetchMore(distanceFromEnd)}
                         ListFooterComponent = { 
-                            hasMore 
+                            loadingMore 
                             ? <ActivityIndicator color={colors.green_dark}/>
                             : <></>
                         }
