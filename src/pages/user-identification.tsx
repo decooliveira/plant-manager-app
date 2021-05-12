@@ -8,11 +8,12 @@ import { SafeAreaView,
     KeyboardAvoidingView, 
     TouchableWithoutFeedback,
     Platform,
-    Keyboard} from 'react-native';
+    Keyboard,
+    Alert} from 'react-native';
 import { Button } from '../components/Button';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function UserIdentification(){
 
@@ -22,8 +23,13 @@ export function UserIdentification(){
     
     const navigation = useNavigation();
     
-    function handleSubmit(){
-        navigation.navigate('Confirmation')
+    async function handleSubmit(){
+        if(!name){
+            return Alert.alert('Diga o seu nome 🙂');
+        }else {
+            await AsyncStorage.setItem('@plantmanager:user', name);
+            navigation.navigate('Confirmation');
+        }
     }
 
     function handleInputBlur(){

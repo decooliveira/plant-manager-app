@@ -45,11 +45,9 @@ export function PlantSelect(){
     const [loadedAll, setLoadedAll] = useState(false);
 
     async function fetchPlants(){
-        console.log(page);
         const {data} = await api.get(`plants?_sort=name&_order=asc&_page=${page}&_limit=8`);
         
         if(!data){
-            console.log('all loaded')
             return setLoadedAll(true);
         }
 
